@@ -16,7 +16,8 @@ if len(sys.argv) != 2:
 mp3file = sys.argv[1]
 
 def get_episode():
-  m = re.match(r"(?:^|.*/)(\d+|\d+.\d).mp3$", mp3file)
+  #m = re.match(r"(?:^|.*/)(\d+|\d+.\d).mp3$", mp3file)
+  m = re.match(r"(?:^|.*/)([\w.-]+).mp3$", mp3file)
   if m is None:
     print("Usage: %s path/to.mp3" % sys.argv[0])
     exit(1)
@@ -30,10 +31,10 @@ def get_episode():
   exit(1)
 
 def parse_time(s):
-  m = re.match('(\d+):(\d+):(\d+)', s)
+  m = re.match(r'(\d+):(\d+):(\d+)', s)
   if m is not None:
     return (int(m.group(1)) * 3600 + int(m.group(2)) * 60 + int(m.group(3))) * 1000
-  m = re.match('(\d+):(\d+)', s)
+  m = re.match(r'(\d+):(\d+)', s)
   if m is not None:
     return (int(m.group(1)) * 60 + int(m.group(2))) * 1000
   print("bad timestamp:", s)
@@ -45,7 +46,7 @@ def get_chapters(ep):
   for topic in ep['topics']:
     print(topic)
   for topic in reversed(ep['topics']):
-    m = re.match('^([\d:]+)\s(.+)\s*$', topic)
+    m = re.match(r'^([\d:]+)\s(.+)\s*$', topic)
     if m is None:
       continue
     start = parse_time(m.group(1))
